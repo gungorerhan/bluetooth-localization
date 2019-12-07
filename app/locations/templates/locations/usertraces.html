@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h1>Indoor Positioning System - User Traces Page</h1>
+
+<h2>Person:      </h2>
+<h4>{{ object.person_id.first_name }} {{ object.person_id.last_name }}</h4>
+
+<h2>Coordinate x:     </h2>
+<h4>{{ object.x }}</h4>
+
+<h2>Coordinate y:      </h2>
+<h4>{{ object.y }}</h4>
+
+<h2>Time:  </h2>
+<h4>{{ object.time }}</h4>
+
+{% endblock %}
