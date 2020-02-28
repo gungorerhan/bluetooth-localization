@@ -81,10 +81,10 @@ WSGI_APPLICATION = 'ips.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'postgres',
+        'NAME': 'bluetooth-localization-web',
         'USER': 'postgres',
-        'PASSWORD': 'postgres',
-        'HOST': 'db',
+        'PASSWORD': 'deskijet1',
+        'HOST': 'bluetooth-localization.c6mdsdjlgnmm.eu-central-1.rds.amazonaws.com',
         'PORT': 5432
     }
 }
