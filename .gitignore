@@ -1,3 +1,7 @@
 venv/
 heatmap/.ipynb_checkpoints
+heatmap/__pycache__/
 app/ips/__pycache__/
+app/locations/__pycache__/
+app/pages/__pycache__/
+app/person/__pycache__/
