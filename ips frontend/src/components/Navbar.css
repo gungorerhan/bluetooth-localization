@@ -1,0 +1,39 @@
+
+#main_navigation{
+    background: #d40c2d;
+    padding: 1px;
+}
+#main_navigation ul{
+    text-align: right;
+    margin-right: 15%;
+}
+
+#main_navigation li{
+    display: inline-block;
+    margin-left: 20px;
+}
+
+#main_navigation a{
+    font-size: 18px;
+    text-decoration: none;
+    text-transform: uppercase;
+    padding: 5px;
+}
+
+#main_navigation a.passive{
+    color: #fff;
+    background: #d40c2d;
+}
+
+#main_navigation a.active{
+    background: #fff;
+    border-radius: 4px;
+    color: #d40c2d;
+}
+
+#main_navigation a:hover{
+    background: #fff;
+    border-radius: 4px;
+    color: #d40c2d;
+}
+
