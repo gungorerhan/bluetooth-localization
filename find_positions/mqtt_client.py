@@ -1,6 +1,7 @@
 import paho.mqtt.client as mqtt
 from bluepy.btle import Scanner, DefaultDelegate
 import numpy as np
+import datetime
 
 
 host = "hairdresser.cloudmqtt.com"
@@ -8,7 +9,7 @@ port = 18407
 username = "smrntlue"
 password = "T8Oenavy62jp"
 
-topic = "IPS/erhan/pd"
+topic = "IPS/E570/pd"
 
 # The callback for when the client receives a CONNACK response from the server.
 def on_connect(client, userdata, flags, rc):
@@ -48,10 +49,11 @@ class ScanDelegate(DefaultDelegate):
 			else:
 				my_devs[mac_id[dev.addr]].append(dev.rssi)
 
-			if isNewDev:
-				print ("Discovered device (%s) with RSSI (%d)" % (dev.addr, dev.rssi))
+			time = str(datetime.datetime.now())
+			if isNewDev:	
+				print ("(%s) - Discovered device (%s) with RSSI (%d)" % (time, dev.addr, dev.rssi))
 			elif isNewData:
-				print ("Received new data from (%s) with RSSI (%d)" % (dev.addr, dev.rssi))
+				print ("(%s) - Received new data from (%s) with RSSI (%d)" % (time, dev.addr, dev.rssi))
 
 
 #scanner = Scanner().withDelegate(ScanDelegate())
@@ -71,10 +73,11 @@ class ScanDelegate(DefaultDelegate):
 
 while True:
 	my_devs = {}
+	scan_time = 20.0
 
 	# collect rssi values
 	scanner = Scanner().withDelegate(ScanDelegate())
-	devices = scanner.scan(20.0, passive=True)
+	devices = scanner.scan(scan_time, passive=True)
 
 	# publish rssi values
 	payload = ""
@@ -82,6 +85,7 @@ while True:
 		key_rssi = "{0:.2f}".format(np.mean(my_devs[key]))
 		payload += str(key) + ":" + str(key_rssi) + ","
 
+	time = str(datetime.datetime.now())
 	payload = payload[:-1]
-	print(f'Payload = {payload}')
+	print(f'({time}) - Payload = {payload}')
 	client.publish(topic=topic, payload=payload)
