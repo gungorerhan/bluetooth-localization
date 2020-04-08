@@ -5,3 +5,5 @@ app/ips/__pycache__/
 app/locations/__pycache__/
 app/pages/__pycache__/
 app/person/__pycache__/
+api/getAllPositions/__pycache__/
+api/addNewPositions/__pycache__/
