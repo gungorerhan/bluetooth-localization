@@ -13,42 +13,48 @@ package_count = 0
 cards = {2292: [], 3131: []}
 positions = {2292: None, 3131: None}
 
+# receiver positions
+receivers = {
+            "erhan-e570":   [2.62, 0],
+            "msi-gt70":     [5.25, 3.45],
+            "raspberry-10": [0, 3.45]
+            }
+
 def on_connect(client, userdata, flag, rc):
     print("Connected with result code " + str(rc))
 
-def make_prediction():
-    for key in cards.keys():
-        cards[key].sort(key = lambda x: x[1], reverse=True)
-        dev, rssi = cards[key][0]
-        positions[key] = dev
+def find_positions():
+    for card_id in cards.keys():
+        cards[card_id].sort(key = lambda x: x[1], reverse=True)
+        dev, rssi = cards[card_id][0]
+        positions[card_id] = dev
 
     print("=======Positions=======")
-    for key in positions:
-        print(f'Key: {key}, Position: {positions[key]}')
+    for card_id in positions:
+        print(f'Key: {card_id}, Position: {positions[card_id]}')
 
 def parse_package(message):
-
     splitted_message = str(message.payload.decode("utf-8")).split(',')
     splitted_message_topic = message.topic.split('/')
     device = splitted_message_topic[1]
 
     for each_message in splitted_message:
-        key, rssi = each_message.split(':')
-        key, rssi = int(key), float(rssi)
-        cards[key].append((device, rssi))
+        card_id, rssi = each_message.split(':')
+        card_id, rssi = int(card_id), float(rssi)
+        cards[card_id].append((device, rssi))
     
 
 def on_message(client, userdata, msg):
-    print(msg.topic+" "+str(msg.payload.decode("utf-8")))
-
-    parse_package(msg)
-
     global package_count
     package_count += 1
     print(f'{package_count} packages arrived!')
-    if (package_count == 2):
+
+    print(msg.topic+"\n"+str(msg.payload.decode("utf-8")))
+    parse_package(msg)
+
+    if (package_count == 3):
         package_count = 0
-        make_prediction()
+        find_positions()
 
         # clear global variables
         global cards

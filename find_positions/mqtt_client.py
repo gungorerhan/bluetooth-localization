@@ -8,7 +8,7 @@ port = 18407
 username = "smrntlue"
 password = "T8Oenavy62jp"
 
-topic = "IPS/erhan/pd"
+topic = "IPS/erhan-e570/pd"
 
 # The callback for when the client receives a CONNACK response from the server.
 def on_connect(client, userdata, flags, rc):
