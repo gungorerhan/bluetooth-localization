@@ -78,7 +78,7 @@ class Prediction:
             
             i = 0
             for v in distances[card_id]:
-                ax.add_patch(plt.Circle((v[2],v[3]), radius= v[1], color=circle_colors[i], fill=False))
+                ax.add_patch(plt.Circle((v[2],v[3]), radius= v[1], color=circle_colors[i%3], fill=False))
                 i += 1
             j += 1
 
@@ -136,15 +136,16 @@ class Prediction:
     def calculate_distances(self):
         n, d0, rssi_d0 = self.n, self.reference_distance, self.reference_rssi
         for key in self.pred_dict:
-            for value in self.pred_dict[key]:
+            for value in self.pred_dict[key]:   
                 # calculate distance
                 d = float("{0:.3f}".format(d0*(10**( (rssi_d0 - value[1]) / (10*n)))))
-                print("d=",d)
+                #print("d=",d)
                 # get receiver coordinates
                 rec_x, rec_y = 0, 0
                 for rec in self.receivers:
                     if (rec.id == value[0]):
                         rec_x, rec_y = rec.x, rec.y
+                        
 
                 # add to distance dictionary
                 self.add_distance(key, value[0], d, rec_x, rec_y)

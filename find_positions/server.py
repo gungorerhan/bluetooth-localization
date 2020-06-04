@@ -1,6 +1,7 @@
 import paho.mqtt.client as mqtt
 from device import Receiver as receiver
 from prediction import Prediction as prediction
+import requests
 
 
 def on_connect(client, userdata, flag, rc):
@@ -31,57 +32,86 @@ def upload_positions_to_cloud(card_positions, url):
 	else:
 		print("Positions succesfully updated to cloud!\n")
 
+		# TODO delete later!!
+		global uploaded_data_count
+		uploaded_data_count += 1
+		print("Upload count:", uploaded_data_count)
+		if uploaded_data_count >= 1000:
+			exit(0)
+		
+
 
 def on_message(client, userdata, message):
 	global package_count
-    package_count += 1
-    print(f'{package_count} packages arrived!')
+	package_count += 1
+	print(f'{package_count} packages arrived!')
 
-    print(message.topic+"\n"+str(message.payload.decode("utf-8")))
-    parse_package(message)
+	print(message.topic+"\n"+str(message.payload.decode("utf-8")))
+	parse_package(message)
 
 	if (package_count == 3):
 		package_count = 0
-	    card_positions = pred.makePrediction()
-	    upload_positions_to_cloud(card_positions, add_positions_url)
+
+		# check if each receiver sent rssi of each card
+		error = 0
+		for card_id in pred.pred_dict.keys():
+			if(len(pred.pred_dict[card_id]) < len(pred.receivers)):
+				error = 1
+
+		if error==1:
+			pred.pred_dict.clear()
+			pred.distance_dict.clear()
+			return
+
+		# call functions in pred.make_prediction()
+		#pred.print_predictionDict()
+		#pred.calculate_distances()
+		#pred.print_distanceDict()
+		#card_positions = pred.find_positions(0.5)
+		#pred.show_positions(card_positions, pred.distance_dict, pred.receivers)
+		#pred.pred_dict.clear()
+		#pred.distance_dict.clear()
+		card_positions = pred.make_prediction()
+		print("Card positions:", card_positions)
+		upload_positions_to_cloud(card_positions, add_positions_url)
 	    
 
-if __name__ == "__main__":
+# global variables
+add_positions_url = "https://t7ftvwr8bi.execute-api.eu-central-1.amazonaws.com/cors/position"
+receivers = []
+package_count = 0    # make prediction when 4 packages arrived
 
-	# global variables
-	add_positions_url = "https://t7ftvwr8bi.execute-api.eu-central-1.amazonaws.com/cors/position"
-   	receivers = []
-   	package_count = 0    # make prediction when 4 packages arrived
+uploaded_data_count = 0 # TODO delete later
 
-   	# mqtt related variables
-	HOST = "hairdresser.cloudmqtt.com"
-	PORT = 18407
-	USERNAME = "smrntlue"
-	PASSWORD = "T8Oenavy62jp"
-	TOPIC = "IPS/+/pd"
+# mqtt related variables
+HOST = "hairdresser.cloudmqtt.com"
+PORT = 18407
+USERNAME = "smrntlue"
+PASSWORD = "T8Oenavy62jp"
+TOPIC = "IPS/+/pd"
 
-   	# add receiver objects
-   	receivers.append(receiver(id="raspberry-10", x=0, y=0))   # top left
-   	receivers.append(receiver(id="msi-gt70", x=5.25, y=0))   # top right
-   	receivers.append(receiver(id="erhan-E570", x=2.62, y=3.45))   # bottom mid
+# add receiver objects
+receivers.append(receiver(id="raspberry-10", x=0, y=0))   # top left
+receivers.append(receiver(id="msi-gt70", x=5.25, y=0))   # top right
+receivers.append(receiver(id="erhan-e570", x=2.62, y=3.45))   # bottom mid
 
-   	# stores prediction dictionary, handles dictionary operations
-   	pred = prediction(receivers, reference_distance=1, reference_rssi=-54, n=2)
+# stores prediction dictionary, handles dictionary operations
+pred = prediction(receivers, reference_distance=1, reference_rssi=-54, n=2)
 
-   	# create client
-   	client = mqtt.Client()
+# create client
+client = mqtt.Client()
 
-	# set callback functions
-	client.on_connect = on_connect
-	client.on_message = on_message
+# set callback functions
+client.on_connect = on_connect
+client.on_message = on_message
 
-	# set username and password
-	client.username_pw_set(USERNAME, PASSWORD)
+# set username and password
+client.username_pw_set(USERNAME, PASSWORD)
 
-	# connect to broker
-	client.connect(HOST, PORT, 60)
+# connect to broker
+client.connect(HOST, PORT, 60)
 
-	# subscribe to periodic data topics
-	client.subscribe(topic=TOPIC)
+# subscribe to periodic data topics
+client.subscribe(topic=TOPIC)
 
-   	client.loop_forever()
+client.loop_forever()
