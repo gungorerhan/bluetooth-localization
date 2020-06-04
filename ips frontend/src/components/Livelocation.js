@@ -1,18 +1,14 @@
 import React, { Component } from 'react';
+import axios from 'axios';
 import Persons from './Persons';
 import Now from './Now';
 import './Livelocation.css';
 
 
 class Livelocation extends Component{
-    
+
     state = {
-        persons: [
-        {card_id: 133, person_name: 'Mehmet', person_surname: 'MUM', x_position: 0, y_position: 0, condition: 'no_show_info'},
-        {card_id: 134, person_name: 'Arda', person_surname: 'KOLTUK', x_position: 6, y_position: 10, condition: 'no_show_info'},
-        {card_id: 135, person_name: 'Faşo', person_surname: 'ERHAN', x_position: 2, y_position: 11.3, condition: 'no_show_info'},
-        {card_id: 136, person_name: 'Hakan', person_surname: 'KALIR', x_position: 20, y_position: 7, condition: 'no_show_info'}
-        ]
+        persons: []
     }
     
     show_info = (id) => {
@@ -22,36 +18,43 @@ class Livelocation extends Component{
         document.getElementById(id).className = 'no_show_info';
     }
     
-    add_todo = (person) => {
-        person.card_id = Math.random();
-        let persons = [...this.state.persons, person];
-        this.setState({
-        persons: persons
-        })
-    }
-    componentDidMount() {this.interval = setInterval(() => this.loop(),10000)}
-    loop = () => {
-        let test_per = [];
+    get_locations = () =>{
+        axios.get(`https://t7ftvwr8bi.execute-api.eu-central-1.amazonaws.com/cors/position/live`)
+                .then(res => {
+                const data = res.data;
+                var keys = Object.keys(data);
+                var values = Object.values(data);
+                let temp_persons = [];
+                
+                for (var i = 0; i < keys.length; i++){
+                    var person = {
+                        person_id: keys[i],
+                        card_id: values[i].cardId,
+                        person_name: values[i].firstName,
+                        person_surname: values[i].lastName,
+                        x_position: values[i].x,
+                        y_position: values[i].y,
+                        condition: 'no_show_info'
+                    }
+                    let persons = [...temp_persons, person];
+                    temp_persons = persons;
+                }
 
-        for(var i = 1; i < 11; i++){
-            var x = Math.random() * 15.7;
-            var y = Math.random() * 12;
-            var person = {
-                card_id: i,
-                person_name: x,
-                person_surname: y,
-                x_position: x,
-                y_position: y,
-                condition: 'no_show_info',
-            }
-            let persons = [...test_per, person];
-            test_per = persons;
-        }
-        
-        this.setState({
-            persons: test_per
-        })
-    };
+                this.setState({
+                    persons: temp_persons
+                })
+                
+            })
+    }
+    componentDidMount() {
+        this.get_locations();
+        this.interval_get_pos = setInterval(this.get_locations, 3000);
+    }
+    componentWillUnmount(){
+        clearInterval(this.interval_get_pos);
+    }
+    
+    
     render(){
         return(
             <div>

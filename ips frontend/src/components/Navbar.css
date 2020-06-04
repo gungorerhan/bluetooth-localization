@@ -5,19 +5,19 @@
 }
 #main_navigation ul{
     text-align: right;
-    margin-right: 15%;
+    margin-right: 2%;
 }
 
 #main_navigation li{
     display: inline-block;
-    margin-left: 20px;
+    margin-left: 1vw;
 }
 
 #main_navigation a{
-    font-size: 18px;
+    font-size: 1.2vw;
     text-decoration: none;
     text-transform: uppercase;
-    padding: 5px;
+    padding: 0.5vw;
 }
 
 #main_navigation a.passive{
@@ -27,13 +27,13 @@
 
 #main_navigation a.active{
     background: #fff;
-    border-radius: 4px;
+    border-radius: 0.7vw;
     color: #d40c2d;
 }
 
 #main_navigation a:hover{
     background: #fff;
-    border-radius: 4px;
+    border-radius: 0.7vw;
     color: #d40c2d;
 }
 

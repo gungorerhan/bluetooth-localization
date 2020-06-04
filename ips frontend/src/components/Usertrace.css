@@ -1,0 +1,150 @@
+#usertrace_container{
+    width: 100%;
+    height: 92vh;
+    background: white;
+    display: flex;
+}
+
+#user_trace_menu{
+    width: 23%;
+    height: 91.9vh;
+    background: #d40c2d;
+    border: 1px white;
+    border-style: solid none none none;
+    color: white;
+    cursor: default;
+
+}
+
+#user_trace_menu div{
+    border: 0.2vh white;
+    border-style: none none solid none;
+}
+
+#user_trace_menu h2{
+    margin: 0;
+    padding: 1.5vh 0;
+    text-transform: capitalize;
+    background-color: wheat;
+    color: #d40c2d;
+    border: 3px white;
+    border-style: solid none;
+}
+
+#user_trace_menu p{
+    display: inline-block;
+    text-transform: capitalize;
+    margin: 0;
+    padding: 2vh 1vh;
+    
+}
+
+#user_trace_menu input{
+    width: 40%;
+    color: #d40c2d;
+    cursor: pointer;
+}
+
+#user_trace_menu input.text{
+    cursor: text;
+}
+
+#user_trace_menu select{
+    width: 46%;
+    margin: 2vh 0;
+    cursor: pointer;
+    color: #d40c2d;
+}
+
+#user_trace_menu option{
+    background: chartreuse;
+}
+
+#user_trace_menu input.usertrace_submit{
+    width: 60%;
+    margin: 3vh 0;
+    padding: 0 0;
+    font-size: x-large;
+    background-color: white;
+    border-radius: 1vh;
+}
+
+#user_trace_menu input.usertrace_submit:hover{
+    background-color: wheat;
+}
+
+
+#usertrace_show{
+    width: 77%;
+    height: 91.6vh;
+    border: 0.2vh solid white;
+
+}
+
+
+#usertrace_floor_plan{
+    margin: 0 auto;
+    width: 91vh;
+    height: 60vh;
+    background: url(./img/floor_plan_erhan.png);
+    background-repeat: round;
+    background-size: cover;
+    text-align: start;
+    padding: 0px;
+    border: 1px solid;
+}
+
+.position_location{
+    position: absolute;
+    width: 1.5vh;
+    height: 1.5vh;
+    background: url(./img/blue_dot.png);
+    background-repeat: round;
+    background-size: cover;
+    margin-top: 20em;
+    padding: 0em;
+    border: 0px;
+    z-index: 1;
+}
+
+.position_line{
+    position: absolute;
+    background: url(./img/arrowed_line.png);
+    background-repeat: repeat-x;
+    transform-origin: top left;
+    padding: 0em;
+}
+
+.show_info{
+    position: absolute;
+    background-color: rgb(236, 236, 236);
+    padding: 0 0.3em;
+    text-align: center;
+    border: 1px solid #d40c2d;
+    border-radius: 1em;
+    z-index: 1;
+    opacity: 0.8;
+    transition: opacity 1s;
+}
+.show_info p{
+    font-size: smaller;
+    color: rgb(27, 5, 126);
+    padding: 0;
+}
+.no_show_info{
+    position: absolute;
+    background-color: rgb(236, 236, 236);
+    padding: 0 0.3em;
+    text-align: center;
+    border: 1px solid #d40c2d;
+    border-radius: 1em;
+    z-index: 1;
+    opacity: 0;
+    transition: opacity 1s;
+}
+
+.no_show_info p{
+    font-size: 0px;
+    transition: 1s;
+    transition-delay: 1s;
+}

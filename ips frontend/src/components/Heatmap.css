@@ -1,0 +1,88 @@
+#heatmap_container{
+    width: 100%;
+    height: 92vh;
+    background: white;
+    display: flex;
+}
+
+#heatmap_input_div{
+    width: 23%;
+    height: 91.9vh;
+    background: #d40c2d;
+    border: 1px white;
+    border-style: solid none none none;
+    color: white;
+    cursor: default;
+
+}
+
+#heatmap_input_div h2{
+    margin: 0;
+    padding: 3vh 0;
+    text-transform: uppercase;
+    text-decoration: underline;
+    border: 3px white;
+    border-style: solid none;
+}
+
+#heatmap_input_div h3{
+    margin: 0;
+    padding: 2vh 0;
+    text-transform: capitalize;
+    background-color: wheat;
+    color: #d40c2d;
+    border: 2px white;
+    border-style: none none solid none;
+}
+
+#heatmap_input_div p{
+    display: inline-block;
+    text-transform: capitalize;
+    margin: 0;
+    padding: 2vh 1vh;
+    
+}
+
+#heatmap_input_div div{
+    border: 0.2vh white;
+    border-style: none none solid none;
+}
+
+#heatmap_input_div input{
+    width: 40%;
+    color: #d40c2d;
+    cursor: pointer;
+}
+
+
+#heatmap_input_div input.heatmap_submit{
+    width: 60%;
+    margin: 3vh 0;
+    padding: 0 0;
+    font-size: x-large;
+    background-color: white;
+    border-radius: 1vh;
+}
+
+#heatmap_input_div input.heatmap_submit:hover{
+    background-color: wheat;
+}
+
+#heatmap_show{
+    width: 77%;
+    height: 91.6vh;
+    border: 0.2vh solid white;
+
+}
+
+#heatmap_floor{
+    margin: 0 auto;
+    width: 91vh;
+    height: 60vh;
+    background: url(./img/floor_plan_erhan.png);
+    background-repeat: round;
+    background-size: cover;
+    text-align: start;
+    padding: 0px;
+    border: 1px solid;
+}

@@ -4,9 +4,9 @@
 
 #floor_plan{
     margin: 0 auto;
-    width: 45em;
-    height: 25em;
-    background: url(./img/floor_plan.png);
+    width: 91vh;
+    height: 60vh;
+    background: url(./img/floor_plan_erhan.png);
     background-repeat: round;
     background-size: cover;
     text-align: start;

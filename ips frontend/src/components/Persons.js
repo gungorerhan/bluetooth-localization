@@ -25,18 +25,18 @@ const Persons = ({persons, show_info, hide_info}) => {
             else
                 person_icon = person_img_5;
 
-            var real_x_pos = ((person.x_position / 15.7) * 36 );
-            var real_y_pos = ((person.y_position / 12) * 18);
+            var real_x_pos = ((person.x_position / 5.25) * 38.7 );
+            var real_y_pos = ((person.y_position / 3.5) * 51);
             var sty = {
-                marginTop: (real_y_pos + 1.7) + "em",
-                marginLeft: (real_x_pos + 3.8)+ "em",
+                marginTop: (real_y_pos + 1.7) + "vh",
+                marginLeft: (real_x_pos + 2.5)+ "vw",
                 backgroundImage: `url(${person_icon})`
             };
-            var pos1 = real_y_pos + 2.7;
-            var pos2 = real_x_pos + 4.8;
+            var pos1 = real_y_pos + 3.2;
+            var pos2 = real_x_pos + 4;
             var info_div = {
-                marginTop: pos1 + "em",
-                marginLeft: pos2 + "em"
+                marginTop: pos1 + "vh",
+                marginLeft: pos2 + "vw"
             };
             
             return (
@@ -48,6 +48,8 @@ const Persons = ({persons, show_info, hide_info}) => {
                         <p>Card id: {person.card_id}</p>
                         <p>Name: {person.person_name}</p>
                         <p>Surname: {person.person_surname}</p>
+                        <p>X position: {person.x_position}</p>
+                        <p>Y position: {person.y_position}</p>
                     </div>
                 </div>
             )

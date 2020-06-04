@@ -1,0 +1,193 @@
+#person_card_container{
+    width: 100%;
+    height: 92vh;
+    background: white;
+    display: flex;
+}
+
+#personcard_menu{
+    width: 23%;
+    height: 91.9vh;
+    background: #d40c2d;
+    border: 1px white;
+    border-style: solid none none none;
+    color: white;
+    text-align: center;
+}
+
+#personcard_menu p.side_title{
+    font-size: x-large;
+    text-decoration: underline;
+    padding: 7% 0;
+    margin: 0;
+    border: 3px white;
+    border-style: solid none;
+    cursor: default;
+}
+
+#personcard_menu p.side_link{
+    margin: 0;
+    padding: 5% 0;
+    border: 1px solid white;
+    border-style: none none solid none;
+    cursor: pointer;
+}
+
+#personcard_menu p.side_link:hover{
+    color: #d40c2d;
+    background: white;
+}
+
+#operation_div{
+    width: 77%;
+    height: 91.2vh;
+    display: block;
+
+}
+
+#operation_title{
+    text-transform: uppercase;
+    text-decoration: underline;
+    margin: 0;
+    padding: 3% 0;
+}
+
+.small_div{
+    width: 27vw;
+    height: 40vh;
+    background: wheat;
+    border-radius: 3vh;
+    margin: 6vh auto;
+    padding: 7vh;
+}
+
+.small_div div{
+    height: 35vh;
+}
+
+.small_div div div{
+    height: fit-content;
+    margin: 0.5vw;
+    display: flex;
+    align-items: baseline;
+}
+
+.small_div p{
+    cursor: default;
+    margin-right: 1vw;
+    flex: 1;
+    text-align: left;
+}
+
+.small_div input{
+    flex: 1;
+}
+
+.small_div input.operation_button{
+    margin-top: 2vh;
+    margin-left: 2vh;
+    background: white;
+    color: #d40c2d;
+    padding: 1vh 3vh;
+    cursor: pointer;
+    font-size: large;
+    border-radius: 1vh;
+}
+
+.small_div input.operation_button:hover{
+    background: rgb(250, 239, 225);
+}
+
+
+.hide_button{
+    display: none;
+}
+
+
+.list_div{
+    width: 60vw;
+    height: 60vh;
+    background: wheat;
+    border-radius: 3vh;
+    margin: 6vh auto;
+    padding: 2vh;
+    display: block;
+}
+
+.list_div div.search{
+    display: flex;
+    align-items: baseline;
+}
+
+
+.list_div div.info_div{
+    display: flex;
+    cursor: pointer;
+    align-items: baseline;
+}
+
+.list_div div.list{
+    height: 47vh;
+    overflow: scroll;
+    scrollbar-width: none;
+}
+
+.list_div div.info_div:hover{
+    background: white;
+}
+
+.list_div div.info_div p{
+    flex: 1;
+    display: inline;
+    margin: 0;
+    padding: 2vh 1vw;
+    border: 2px white;
+    border-style: solid none none none ;
+    text-align: start;
+    overflow-wrap: break-word;
+    overflow: scroll;
+    scrollbar-width: none;
+}
+
+.list_div div.info_div_title{
+    display: flex;
+    cursor: pointer;
+    align-items: baseline;
+}
+
+.list_div div.list div.info_div_title p{
+    flex: 1;
+    display: inline;
+    margin: 0;
+    padding: 2vh 1vw;
+    border: 2px white;
+    border-style: solid none none none ;
+    text-align: start;
+    font-size: x-large;
+    text-transform: uppercase;
+    text-decoration: underline;
+}
+
+
+.list_div input{
+    width: 55vw;
+    flex: 1;
+}
+
+.list_div div.search p{
+    padding: 2vh 1vw;
+    text-transform: uppercase;
+    font-size: larger;
+}
+
+.op_active{
+    display: block;
+}
+
+.op_passive{
+    display: none;
+}
+
+#info_message{
+    color: blue;
+}

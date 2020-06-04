@@ -46,6 +46,7 @@ class Now extends Component{
         }
     }
     componentDidMount() {this.interval = setInterval(() => this.update_date(),1)}
+    componentWillUnmount() {clearInterval(this.interval)}
     render(){
         return(
         <p>{this.state.current_date}</p>
