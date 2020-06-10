@@ -1,5 +1,7 @@
 import React from 'react';
 
+
+// draw lines between two position
 const UsertraceLines = ({line_positions}) => {
     
     const person_list = (
@@ -49,7 +51,6 @@ const UsertraceLines = ({line_positions}) => {
             }
             
 
-            console.log(rotation_degreeZ);
 
             var sty = {
                 width: line_width,

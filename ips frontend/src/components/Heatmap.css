@@ -77,9 +77,8 @@
 
 #heatmap_floor{
     margin: 0 auto;
-    width: 91vh;
-    height: 60vh;
-    background: url(./img/floor_plan_erhan.png);
+    width: 120vh;
+    height: 78vh;
     background-repeat: round;
     background-size: cover;
     text-align: start;

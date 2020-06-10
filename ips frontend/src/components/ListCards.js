@@ -1,5 +1,7 @@
 import React from 'react';
 
+
+// component for listing cards
 const ListCards = ({cards,handle_delete, handle_filter_card}) => {
     const card_list = (
         cards.map(card => {                        

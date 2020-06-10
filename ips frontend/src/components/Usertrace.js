@@ -10,44 +10,133 @@ class Usertrace extends Component {
     state = {
         persons: [],
         filtered_persons: [],
-        positions: [
-            {x_position: 2, y_position:3.5, date: "22-02-2020 18:30:00", condition: "no_show_info"},
-            {x_position: 1.2, y_position:3, date: "22-03-2020 18:30:00", condition: "no_show_info"},
-            {x_position: 4.1, y_position:1.8, date: "22-04-2020 18:30:00", condition: "no_show_info"}
-        ],
-        line_positions:[
-            {start_x: 2, start_y: 3.5, end_x: 1.2, end_y:3},
-            {start_x: 1.2, start_y: 3, end_x: 4.1, end_y:1.8},
-        ]
+        positions: [],
+        line_positions:[]
     }
     componentDidUpdate(){
         this.add_persons();
     }
     componentDidMount(){
-        //this.get_persons();
-        this.interval_get_pos = setInterval(this.randomPositions, 3000);
+        this.get_persons();
+        this.filter_positions();
+        
     }
-    randomPositions = () =>{
-        var p1 = Math.random() * 5.25;
-        var p2 = Math.random() * 3.5;
+    
 
-        var p3 = Math.random() * 5.25;
-        var p4 = Math.random() * 3.5;
+    // filter positions  inside 0.3 m near
+    filter_positions = () =>{
+        var length = this.state.positions.length;
 
-        var p5 = Math.random() * 5.25;
-        var p6 = Math.random() * 3.5;
+        for( var i = 0; i < length; i++){
+            var x_pos = this.state.positions[i].x_position;
+            var y_pos = this.state.positions[i].y_position;
+            for (var j = i+1; j<length; j++){
+                var distance = Math.pow(x_pos-this.state.positions[j].x_position,2) +
+                                Math.pow(y_pos-this.state.positions[j].y_position,2);
+                
+                distance = Math.sqrt(distance);
+                
+                if(distance < 0.3){
+                    this.state.positions[j].date = "0";
+                }
+            }
+        }
 
-        this.setState({positions: [
-            {x_position: p1, y_position:p2, date: "22-02-2020 18:30:00", condition: "no_show_info"},
-            {x_position: p3, y_position:p4, date: "22-03-2020 18:30:00", condition: "no_show_info"},
-            {x_position: p5, y_position:p6, date: "22-04-2020 18:30:00", condition: "no_show_info"}
-        ]});
-
-        this.setState({line_positions:[
-            {start_x: p1, start_y: p2, end_x: p3, end_y:p4},
-            {start_x: p3, start_y: p4, end_x: p5, end_y:p6},
-        ]});
+        this.setState({
+            positions: this.state.positions.filter(function(position){
+                return position.date !== "0";
+            })
+        })
     }
+
+    // generate lines begin and end positions
+    adjust_line_positions(){
+        var length = this.state.positions.length - 1;
+        
+        let temp_line_positions = [];
+
+        for( var i = 0; i < length; i++){
+                
+            var line_position = {
+                start_x: this.state.positions[i].x_position,
+                start_y: this.state.positions[i].y_position,
+                end_x: this.state.positions[i+1].x_position,
+                end_y: this.state.positions[i+1].y_position
+            }
+            let line_positions = [...temp_line_positions, line_position];
+            temp_line_positions = line_positions;
+        
+
+            
+        } 
+        
+        this.setState({
+            line_positions: temp_line_positions
+        });
+
+    }
+
+    // get locations from server
+    get_positions = () =>{
+        if(document.getElementById("begin_date").value === ''
+            || document.getElementById("begin_hour").value === ''
+            || document.getElementById("end_date").value === ''
+            || document.getElementById("end_hour").value === ''){
+        }
+        else{
+            if( document.getElementById("begin_date").value == document.getElementById("end_date").value){
+                var begin_date = document.getElementById("begin_date").value + " " 
+                    + document.getElementById("begin_hour").value + ":00";
+
+                var end_date = document.getElementById("end_date").value + " " 
+                    + document.getElementById("end_hour").value + ":00";
+
+                if(end_date > begin_date){
+                    document.getElementById("begin_p_tag").innerHTML = "Begin date: " + begin_date;
+                    document.getElementById("end_p_tag").innerHTML = "End date: " + end_date;
+                    
+
+                    var e = document.getElementById("person_select");
+                    var id = e.options[e.selectedIndex].value;
+
+                    document.getElementById("person_p_tag").innerHTML = "Person: " + e.options[e.selectedIndex].innerHTML;
+
+
+                    var url = 'https://t7ftvwr8bi.execute-api.eu-central-1.amazonaws.com/cors/position/person-trace?personId="';
+                    url = url + id + '"';
+                    url = url + '&startTime="' + begin_date + '"';
+                    url = url + '&endTime="' + end_date + '"';
+
+                    axios.get(url)
+                        .then(res => {
+                            const data = res.data;
+                            var keys = Object.keys(data);
+                            var values = Object.values(data);
+                            let temp_positions = [];
+                
+                            for (var i = 0; i < keys.length; i++){
+                                var position = {
+                                    date: keys[i],
+                                    x_position: values[i].x,
+                                    y_position: values[i].y,
+                                    condition: "no_show_info"
+                                }
+                                let positions = [...temp_positions, position];
+                                temp_positions = positions;
+                            }
+                
+                            this.setState({
+                                positions: temp_positions
+                            })
+                            this.filter_positions();
+                            this.adjust_line_positions();
+                    });
+                }
+            }
+        }
+    }
+
+    // get persons from server
     get_persons(){
         axios.get(`https://t7ftvwr8bi.execute-api.eu-central-1.amazonaws.com/cors/person`)
             .then(res => {
@@ -75,6 +164,7 @@ class Usertrace extends Component {
         })
     }
 
+    // search person by name or person id
     handle_filter_person = () => {
         var input_value = document.getElementById("search_input").value;
         if( input_value === ""){
@@ -93,6 +183,8 @@ class Usertrace extends Component {
         }
     }
 
+
+    // add persons to select tag
     add_persons = () =>{
         var person_select = document.getElementById('person_select');
         person_select.innerHTML = "";
@@ -128,22 +220,22 @@ class Usertrace extends Component {
                     <h2 >begin time</h2>
                     <div>
                         <p>date:</p>
-                        <input type="date"></input>
+                        <input id="begin_date" type="date"></input>
                     </div>
                     <div>
                         <p>hour:</p>
-                        <input type="time"></input>
+                        <input id="begin_hour" type="time"></input>
                     </div>
                     <h2 >end time</h2>
                     <div>
                         <p>date:</p>
-                        <input type="date"></input>
+                        <input id="end_date" type="date"></input>
                     </div>
                     <div>
                         <p>hour:</p>
-                        <input type="time"></input>
+                        <input id="end_hour" type="time"></input>
                     </div>
-                    <input className="usertrace_submit" type="submit" value="Show"></input>
+                    <input className="usertrace_submit" type="submit" value="Show" onClick={this.get_positions}></input>
                 </div >
                 <div id="usertrace_show">
                     <h1>User Trace</h1>

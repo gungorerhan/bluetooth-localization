@@ -6,6 +6,8 @@ import person_img_3 from './img/person_icon_3.png';
 import person_img_4 from './img/person_icon_4.png';
 import person_img_5 from './img/person_icon_5.png';
 
+
+// position a person on the map
 const Persons = ({persons, show_info, hide_info}) => {
     const person_list = (
         persons.map(person => {                        

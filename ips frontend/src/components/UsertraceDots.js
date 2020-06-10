@@ -1,5 +1,7 @@
 import React from 'react';
 
+
+// locate positions on the map
 const UsertraceDots = ({positions, show_info, hide_info}) => {
     const person_list = (
         positions.map(position => {                        

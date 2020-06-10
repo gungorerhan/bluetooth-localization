@@ -1,10 +1,13 @@
 import React, { Component } from 'react';
 import axios from 'axios';
+import { Base64 } from 'js-base64'; 
 import './Heatmap.css';
-
+import plan from './img/floor_plan_erhan.png';
 
 
 class Heatmap extends Component {
+
+    // get heatmap from server
     get_locations = () =>{
         if(document.getElementById("begin_date").value === ''
             || document.getElementById("begin_hour").value === ''
@@ -19,21 +22,28 @@ class Heatmap extends Component {
             + document.getElementById("end_hour").value + ":00";
 
             if(end_date > begin_date){
-                document.getElementById("begin_p_tag").innerHTML = "Begin date: " + begin_date;
-                document.getElementById("end_p_tag").innerHTML = "End date: " + end_date;
-                var params = {
-                    startTime: begin_date,
-                    endTime: end_date
-                }
-                axios.get(`https://t7ftvwr8bi.execute-api.eu-central-1.amazonaws.com/cors/position/heatmap`, params)
+            
+                
+                var url = 'https://t7ftvwr8bi.execute-api.eu-central-1.amazonaws.com/cors/position/heatmap?';
+                url = url + 'startTime="' + begin_date + '"';
+                url = url + '&endTime="' + end_date + '"';
+
+
+                axios.get(url)
                     .then(res => {
                     const data = res.data;
-                    console.log(data);
+                    
+                    var fp = document.getElementById("heatmap_floor");
+                    var hm = "data:image/png;base64," + data;
+                    fp.style.backgroundImage = `url(${hm})`;
+                    
+                    this.forceUpdate();
                     
                 });
             }
         }
-    }
+    
+    } 
     render(){
         return(
             <div id="heatmap_container">
@@ -64,7 +74,7 @@ class Heatmap extends Component {
                     <p id="begin_p_tag"></p>
                     <p id="end_p_tag"></p>
                     <div id="heatmap_floor">
-
+                        
                     </div>
                 </div>
             </div>

@@ -8,6 +8,8 @@ import 'react-confirm-alert/src/react-confirm-alert.css'; // Import css
 
 
 class Personcard extends Component{
+    
+    // boolean value for edit_texts  editable or not
     state = {
         persons: [],
         cards: [],
@@ -17,7 +19,8 @@ class Personcard extends Component{
         boolean: false,
         the_card_id: ""
     }
-
+    
+    // Show add person or add card page
     handle_click_1 = (e) =>{
         this.setState({boolean: false})
         document.getElementById("add_person_personid").value = ""; 
@@ -39,7 +42,8 @@ class Personcard extends Component{
             document.getElementById("add_card").className = "small_div op_active";
         }
     }
-
+    
+    // Show   show person or show card page
     handle_click_2 = (e) =>{
         document.getElementById("info_message").innerHTML = "";
         document.getElementsByClassName("op_active")[0].className = "op_passive";
@@ -48,7 +52,7 @@ class Personcard extends Component{
             document.getElementById("show_persons").className = "list_div op_active";
             document.getElementsByClassName("")
 
-            
+            // get persons from server in order to show them
             axios.get(`https://t7ftvwr8bi.execute-api.eu-central-1.amazonaws.com/cors/person`)
                 .then(res => {
                 const data = res.data;
@@ -79,6 +83,7 @@ class Personcard extends Component{
             document.getElementById("operation_title").innerHTML = e.target.innerHTML;
             document.getElementById("delete_card").className = "list_div op_active";
 
+            // get cards from server in order to show them
             axios.get(`https://t7ftvwr8bi.execute-api.eu-central-1.amazonaws.com/cors/card`)
                 .then(res => {
                 const data = res.data;
@@ -122,7 +127,7 @@ class Personcard extends Component{
         
     }
 
-
+    // Add person to server
     handle_add_person(){
         if( document.getElementById("add_person_personid").value === "" || 
             document.getElementById("add_person_cardid").value === "" ||  
@@ -130,13 +135,15 @@ class Personcard extends Component{
             document.getElementById("add_person_lastname").value === ""){
             }
         else{
+            // create person variable
             var params = {
                 personId: document.getElementById("add_person_personid").value,
                 firstName: document.getElementById("add_person_firstname").value,
                 lastName: document.getElementById("add_person_lastname").value,
                 cardId: document.getElementById("add_person_cardid").value
             }
-            console.log(params);
+
+            // insert person to server
             axios.post('https://t7ftvwr8bi.execute-api.eu-central-1.amazonaws.com/cors/person', params).then(res => {
                 if(res.status === 200){
                     document.getElementById("info_message").innerHTML = "Person is added succesfully!";
@@ -156,6 +163,8 @@ class Personcard extends Component{
         
     }
 
+
+    // update person information
     handle_update_person(){
         if( document.getElementById("add_person_personid").value === "" || 
             document.getElementById("add_person_cardid").value === "" ||  
@@ -170,6 +179,8 @@ class Personcard extends Component{
                 lastName: document.getElementById("add_person_lastname").value,
                 cardId: document.getElementById("add_person_cardid").value
             }
+
+            // update person information to server
             axios.put('https://t7ftvwr8bi.execute-api.eu-central-1.amazonaws.com/cors/person', params).then(res => {
                 if(res.status === 200){
                     document.getElementById("info_message").innerHTML = "Person is updated succesfully!";
@@ -182,6 +193,7 @@ class Personcard extends Component{
         
     }
 
+    // delete person by his id
     handle_delete_person = () =>{
         var person_id = document.getElementById("add_person_personid").value;
         confirmAlert({
@@ -216,6 +228,7 @@ class Personcard extends Component{
           });
     }
 
+    // add card to server
     handle_add_card = () =>{
         if( document.getElementById("add_card_cardid").value === "" ){
                 console.log("errrorr");
@@ -236,6 +249,8 @@ class Personcard extends Component{
             });
         }
     }
+
+    // delete card from server by its card id
     handle_delete_card = (card_id) => {
         confirmAlert({
             title: 'Delete the card',
@@ -251,6 +266,13 @@ class Personcard extends Component{
                         if(res.status === 200){
                             document.getElementById("info_message").innerHTML = "Card is deleted succesfully!";
                             document.getElementById("add_card_cardid").value = "";
+
+                            this.setState({
+                                cards: this.state.cards.filter(function(card){
+                                    return card.card_id != card_id
+                                })
+                            })
+                            this.handle_filter_card();
                         }
                         else{
                             document.getElementById("info_message").innerHTML = "Card is not deleted!";
@@ -267,6 +289,8 @@ class Personcard extends Component{
           });
     }
 
+
+    // search a card by its id
     handle_filter_card = () =>{
         var input_value = document.getElementById("card_input").value;
         if(input_value === ""){
@@ -281,6 +305,7 @@ class Personcard extends Component{
         }
     }
 
+    // search person by name or by person id
     handle_filter_person = () => {
         var input_value = document.getElementById("person_input").value;
         console.log(input_value);

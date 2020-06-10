@@ -1,5 +1,7 @@
 import React, {Component} from 'react';
 
+
+// return current time
 class Now extends Component{
     state = {
         current_date: ""

@@ -104,7 +104,7 @@
     margin-top: 20em;
     padding: 0em;
     border: 0px;
-    z-index: 1;
+    z-index: 2;
 }
 
 .position_line{
@@ -113,6 +113,7 @@
     background-repeat: repeat-x;
     transform-origin: top left;
     padding: 0em;
+    z-index: 1;
 }
 
 .show_info{
@@ -122,7 +123,7 @@
     text-align: center;
     border: 1px solid #d40c2d;
     border-radius: 1em;
-    z-index: 1;
+    z-index: 3;
     opacity: 0.8;
     transition: opacity 1s;
 }
@@ -138,7 +139,7 @@
     text-align: center;
     border: 1px solid #d40c2d;
     border-radius: 1em;
-    z-index: 1;
+    z-index: 3;
     opacity: 0;
     transition: opacity 1s;
 }

@@ -11,6 +11,7 @@ class Livelocation extends Component{
         persons: []
     }
     
+    // adjust info div
     show_info = (id) => {
         document.getElementById(id).className = 'show_info'; 
     }
@@ -18,6 +19,7 @@ class Livelocation extends Component{
         document.getElementById(id).className = 'no_show_info';
     }
     
+    // get current locations from server
     get_locations = () =>{
         axios.get(`https://t7ftvwr8bi.execute-api.eu-central-1.amazonaws.com/cors/position/live`)
                 .then(res => {
@@ -46,10 +48,14 @@ class Livelocation extends Component{
                 
             })
     }
+
+    // api call every 3 seconds
     componentDidMount() {
         this.get_locations();
         this.interval_get_pos = setInterval(this.get_locations, 3000);
     }
+
+    // stop api calling
     componentWillUnmount(){
         clearInterval(this.interval_get_pos);
     }

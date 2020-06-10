@@ -1,5 +1,7 @@
 import React from 'react';
 
+
+// component for listing persons
 const ListPersons = ({persons, handle_show, handle_filter_person}) => {
     const person_list = (
         persons.map(person => {                        
