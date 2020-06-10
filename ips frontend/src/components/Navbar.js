@@ -17,7 +17,7 @@ class Navbar extends Component {
             <nav id="main_navigation">  
                 
                 <ul>
-                    <li><Link id="live_locations" className="active" to="/livelocation" onClick={this.handle_click}>Live Locations</Link></li>
+                    <li><Link id="live_locations" className="active" to="/" onClick={this.handle_click}>Live Locations</Link></li>
                     <li><Link id="heatmap" className="passive"  to="/heatmap" onClick={this.handle_click}>Heatmap</Link></li>
                     <li><Link id="usertraces" className="passive" to="/usertrace" onClick={this.handle_click}>User Traces</Link></li>
                     <li><Link id="person_card" className="passive" to="/personcard" onClick={this.handle_click}>Person Card</Link></li>

@@ -13,7 +13,7 @@ class App extends Component {
       <BrowserRouter>
         <div >
           <Navbar></Navbar>
-          <Route path="/livelocation" component = {Livelocation}></Route>
+          <Route exact path="/" component = {Livelocation}></Route>
           <Route path="/heatmap" component = {Heatmap}></Route>
           <Route path="/usertrace" component = {Usertrace}></Route>
           <Route path="/personcard" component = {Personcard}></Route>
