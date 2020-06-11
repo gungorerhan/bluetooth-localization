@@ -2,13 +2,14 @@ import paho.mqtt.client as mqtt
 from bluepy.btle import Scanner, DefaultDelegate
 import numpy as np
 
-
+# mqtt variables
 host = "hairdresser.cloudmqtt.com"
 port = 18407
 username = "smrntlue"
 password = "T8Oenavy62jp"
 
-topic = "IPS/erhan-e570/pd"
+topic = "IPS/erhan-e570/rssi"
+
 
 # The callback for when the client receives a CONNACK response from the server.
 def on_connect(client, userdata, flags, rc):
@@ -20,6 +21,7 @@ def on_message(client, userdata, msg):
     print("topic: " + msg.topic+", msg: "+str(msg.payload.decode('utf-8')))
 
 
+# extending bluez scan class to record rssi values
 class ScanDelegate(DefaultDelegate):
 	def __init__(self):
 		DefaultDelegate.__init__(self)
@@ -37,7 +39,8 @@ class ScanDelegate(DefaultDelegate):
 				print ("Received new data from (%s) with RSSI (%d)" % (dev.addr, dev.rssi))
 
 
-# main func 
+
+# main func
 client = mqtt.Client()
 client.on_connect = on_connect
 client.on_message = on_message

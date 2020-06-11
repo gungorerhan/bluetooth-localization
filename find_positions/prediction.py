@@ -136,7 +136,12 @@ class Prediction:
     def calculate_distances(self):
         n, d0, rssi_d0 = self.n, self.reference_distance, self.reference_rssi
         for key in self.pred_dict:
-            for value in self.pred_dict[key]:   
+            for value in self.pred_dict[key]:  
+
+                # TODO delete later !!!
+                if value[0] == "msi-gt70":
+                    rssi_d0 = -58
+
                 # calculate distance
                 d = float("{0:.3f}".format(d0*(10**( (rssi_d0 - value[1]) / (10*n)))))
                 #print("d=",d)

@@ -1,7 +1,6 @@
 import paho.mqtt.client as mqtt
 from device import Receiver as receiver
 from prediction import Prediction as prediction
-import requests
 
 
 def on_connect(client, userdata, flag, rc):
@@ -17,28 +16,6 @@ def parse_package(message):
         card_id, rssi = each_message.split(':')
         card_id, rssi = int(card_id), float(rssi)
         pred.add_new_value(card_id, receiver_id, rssi)
-
-
-def upload_positions_to_cloud(card_positions, url):
-	# format card positions in order to work with API
-	for card_id in card_positions.keys():
-		temp = card_positions[card_id]
-		card_positions[card_id] = {'x':temp[0], 'y':temp[1]}
-
-	# make post request
-	response = requests.post(url, json=card_positions)
-	if response.status_code != 200:
-		print("HTTP request error: ", response)
-	else:
-		print("Positions succesfully updated to cloud!\n")
-
-		# TODO delete later!!
-		global uploaded_data_count
-		uploaded_data_count += 1
-		print("Upload count:", uploaded_data_count)
-		if uploaded_data_count >= 1000:
-			exit(0)
-		
 
 
 def on_message(client, userdata, message):
@@ -63,22 +40,17 @@ def on_message(client, userdata, message):
 			pred.distance_dict.clear()
 			return
 
-		# call functions in pred.make_prediction()
-		#pred.print_predictionDict()
-		#pred.calculate_distances()
-		#pred.print_distanceDict()
-		#card_positions = pred.find_positions(0.5)
-		#pred.show_positions(card_positions, pred.distance_dict, pred.receivers)
-		#pred.pred_dict.clear()
-		#pred.distance_dict.clear()
-		card_positions = pred.make_prediction()
-		print("Card positions:", card_positions)
-		upload_positions_to_cloud(card_positions, add_positions_url)
-	    
+		pred.print_predictionDict()
+		pred.calculate_distances()
+		pred.print_distanceDict()
+		pred.pred_dict.clear()
+		pred.distance_dict.clear()
+
+		#record_rssi_log
+
 
 # main func
 # global variables
-add_positions_url = "https://t7ftvwr8bi.execute-api.eu-central-1.amazonaws.com/cors/position"
 receivers = []
 package_count = 0    # make prediction when 4 packages arrived
 
@@ -89,7 +61,7 @@ HOST = "hairdresser.cloudmqtt.com"
 PORT = 18407
 USERNAME = "smrntlue"
 PASSWORD = "T8Oenavy62jp"
-TOPIC = "IPS/+/pd"
+TOPIC = "IPS/+/rssi"
 
 # add receiver objects
 receivers.append(receiver(id="raspberry-10", x=0, y=0))   # top left
