@@ -4,6 +4,7 @@ import pandas as pd
 import math
 import matplotlib.pyplot as plt
 import numpy as np
+from fingerprinting import fingerprinting as fp
 
 class Prediction:
     def __init__(self, receivers, reference_distance, reference_rssi, n):
@@ -13,6 +14,39 @@ class Prediction:
         self.reference_distance = reference_distance   
         self.reference_rssi = reference_rssi    # rssi at reference_distance
         self.n = n  # coefficent that depends on environment
+        self.set_fingerprinting()
+
+    def set_fingerprinting(self):
+        model_filename = 'svm_final_model.sav'
+        model_features = ["msi-gt70", "raspberry-10", "erhan-e570"]
+        model_classes = {0: [1,1], 1: [4.25, 2.45]}
+        probability_threshold = 0.7
+        self.fingerprinting = fp(model_filename, model_features, model_classes, probability_threshold)
+
+
+    def combined_positioning(self, trilateration_positions, pred_dict):
+        try:
+            final_positions = {}
+            for key, value in pred_dict.items():
+                # "msi-gt70", "raspberry-10", "erhan-e570"
+                ordered_rssi = []
+                for receiver in self.fingerprinting.features:
+                    for val in value:
+                        if receiver == val[0]:
+                            ordered_rssi.append(val[1])
+                
+                # find positions with fingerprinting
+                highest_prob, highest_prob_class = self.fingerprinting.find_highest_class_prob(ordered_rssi)
+                print(f'{key} = prob:{highest_prob}, class={highest_prob_class}')
+
+                # combine trilateration and fingerprinting results
+                final_x = highest_prob_class[0]*highest_prob + trilateration_positions[key][0]*(1-highest_prob)
+                final_y = highest_prob_class[1]*highest_prob + trilateration_positions[key][1]*(1-highest_prob)
+                final_positions[key] = [final_x, final_y]
+
+            return final_positions
+        except Exception as e:
+            print(e)
 
     # adds new value to the prediction dictionary
     def add_new_value(self, card_id, receiver_id, rssi):
@@ -24,11 +58,15 @@ class Prediction:
             return True
         return False
 
+
     def make_prediction(self):
         self.print_predictionDict()
         self.calculate_distances()
         self.print_distanceDict()
-        card_positions = self.find_positions(0.5)
+        trilateration_positions = self.trilateration(0.2)
+        print("Trilateration: ", trilateration_positions)
+        # final positions
+        card_positions = self.combined_positioning(trilateration_positions, self.pred_dict)
         
         print("=====================   Predicted Positions   =====================")
         for key in card_positions:
@@ -86,8 +124,9 @@ class Prediction:
         plt.show()
         #plt.savefig("temp.png")
 
+
     # finds position of all keys in the area
-    def find_positions(self, bias):
+    def trilateration(self, bias):
         def inCircle(r, x, y, i, j):
             return ((i-x)**2 + (j-y)**2) <= r**2
         
@@ -131,6 +170,7 @@ class Prediction:
         
         return card_positions
 
+
     # calculates distance between transmitter and receiver, uses RSSI
     # d = d0 * 10^^( (rssi_at_d0 - rssi_calc) / (10*n) )
     def calculate_distances(self):
@@ -138,13 +178,20 @@ class Prediction:
         for key in self.pred_dict:
             for value in self.pred_dict[key]:  
 
-                # TODO delete later !!!
+                # TODO delete later - different receivers require different reference points
                 if value[0] == "msi-gt70":
                     rssi_d0 = -58
+                    d0 = 1
+                elif value[0] == "erhan-e570":
+                    rssi_d0 = -50
+                    d0 = 2
+                else:
+                    rssi_d0 = self.reference_rssi
+                    d0 = self.reference_distance
 
                 # calculate distance
                 d = float("{0:.3f}".format(d0*(10**( (rssi_d0 - value[1]) / (10*n)))))
-                #print("d=",d)
+
                 # get receiver coordinates
                 rec_x, rec_y = 0, 0
                 for rec in self.receivers:

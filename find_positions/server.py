@@ -44,7 +44,7 @@ def upload_positions_to_cloud(card_positions, url):
 def on_message(client, userdata, message):
 	global package_count
 	package_count += 1
-	print(f'{package_count} packages arrived!')
+	print(f'\n{package_count} packages arrived!')
 
 	print(message.topic+"\n"+str(message.payload.decode("utf-8")))
 	parse_package(message)
@@ -63,16 +63,9 @@ def on_message(client, userdata, message):
 			pred.distance_dict.clear()
 			return
 
-		# call functions in pred.make_prediction()
-		#pred.print_predictionDict()
-		#pred.calculate_distances()
-		#pred.print_distanceDict()
-		#card_positions = pred.find_positions(0.5)
-		#pred.show_positions(card_positions, pred.distance_dict, pred.receivers)
-		#pred.pred_dict.clear()
-		#pred.distance_dict.clear()
+		# find card positions
 		card_positions = pred.make_prediction()
-		print("Card positions:", card_positions)
+		#print("Card positions:", card_positions)
 		upload_positions_to_cloud(card_positions, add_positions_url)
 	    
 
@@ -98,6 +91,13 @@ receivers.append(receiver(id="erhan-e570", x=2.62, y=3.45))   # bottom mid
 
 # stores prediction dictionary, handles dictionary operations
 pred = prediction(receivers, reference_distance=1, reference_rssi=-54, n=2)
+
+# set fingerprinting
+#model_filename = 'svm_final_model.sav'
+#model_features = ["msi-gt70", "raspberry-10", "erhan-e570"]
+#model_classes = {0: [1,1], 1: [4.25, 2.45]}
+#pred.set_fingerprinting(model_filename, model_features, model_classes)
+
 
 # create client
 client = mqtt.Client()
