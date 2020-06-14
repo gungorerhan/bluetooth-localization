@@ -30,15 +30,7 @@ def upload_positions_to_cloud(card_positions, url):
 	if response.status_code != 200:
 		print("HTTP request error: ", response)
 	else:
-		print("Positions succesfully updated to cloud!\n")
-
-		# TODO delete later!!
-		global uploaded_data_count
-		uploaded_data_count += 1
-		print("Upload count:", uploaded_data_count)
-		if uploaded_data_count >= 1000:
-			exit(0)
-		
+		print("Positions succesfully uploaded to cloud!\n")
 
 
 def on_message(client, userdata, message):
@@ -74,8 +66,6 @@ def on_message(client, userdata, message):
 add_positions_url = "https://t7ftvwr8bi.execute-api.eu-central-1.amazonaws.com/cors/position"
 receivers = []
 package_count = 0    # make prediction when 4 packages arrived
-
-uploaded_data_count = 0 # TODO delete later
 
 # mqtt related variables
 HOST = "hairdresser.cloudmqtt.com"
