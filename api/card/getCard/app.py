@@ -32,7 +32,7 @@ def handler(event, context):
                 
         cur.execute(query)
         for row in cur:
-            responseBody[row[0]] = {"assignDate":row[1]}
+            responseBody[row[0]] = {"assignDate":str(row[1])}
         
        
     conn.commit()

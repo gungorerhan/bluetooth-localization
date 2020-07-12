@@ -28,16 +28,17 @@ def handler(event, context):
     
     # Construct the body of the response object
     responseBody = {}
-    eventBody = json.loads(eventBody)
-    with conn.cursor() as cur:
-        values = ""
-        for cardId in eventBody.keys():
-            values += f'((SELECT personId from Person where cardId={cardId}),\
-                "{cardId}", {eventBody[cardId]["x"]}, {eventBody[cardId]["y"]}, NOW()),'
-        values = values[:-1]
-        
-        cur.execute("INSERT INTO Positions (personId, cardId, x, y, time) VALUES" + values + ";")
+    query = "SELECT * FROM Person;"
+    
+    if eventBody:
+        eventBody = json.loads(eventBody)
+        if eventBody["personId"]:
+            query = f'SELECT * FROM Person WHERE personId="{eventBody["personId"]}";'
 
+    with conn.cursor() as cur:
+        cur.execute(query)
+        for row in cur:
+            responseBody[row[0]] = {"firstName": row[1], "lastName": row[2], "cardId": row[3]}
 
     conn.commit()
 
@@ -46,6 +47,7 @@ def handler(event, context):
     responseObject['statusCode'] = 200
     responseObject['headers'] = {}
     responseObject['headers']['Content-Type'] = 'application/json'
+    responseObject['headers']['Access-Control-Allow-Origin'] = '*'
     responseObject['body'] = json.dumps(responseBody)
 
     # Return the response object

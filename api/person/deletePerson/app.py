@@ -24,16 +24,19 @@ logger.info("SUCCESS: Connection to RDS MySQL instance succeeded")
 
 def handler(event, context):
     # Parse event body
-    eventBody = event["body"]
-    eventBody = json.loads(eventBody)
-    personId = eventBody["personId"]
+    #eventBody = event["body"]
+    #logger.info(f'EventBody: {str(eventBody)}')
+    #eventBody = json.loads(eventBody)
+    #personId = eventBody["personId"]
+    
+    personId = event["queryStringParameters"]['personId']
     
     # Construct the body of the response object
     responseBody = {}
     responseBody['status'] =f'Person with id={personId} deleted'
     
     with conn.cursor() as cur:
-        cur.execute("DELETE FROM Person WHERE personId='" +personId+ "';")
+        cur.execute("DELETE FROM Person WHERE personId=" +personId+ ";")
         logger.info(f'Person with id={personId} deleted.')
 
 
@@ -45,6 +48,7 @@ def handler(event, context):
     responseObject['statusCode'] = 200
     responseObject['headers'] = {}
     responseObject['headers']['Content-Type'] = 'application/json'
+    responseObject['headers']['Access-Control-Allow-Origin'] = '*'
     responseObject['body'] = json.dumps(responseBody)
 
     # Return the response object

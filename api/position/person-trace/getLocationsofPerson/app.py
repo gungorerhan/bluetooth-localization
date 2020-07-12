@@ -23,13 +23,15 @@ except pymysql.MySQLError as e:
 logger.info("SUCCESS: Connection to RDS MySQL instance succeeded")
 
 def handler(event, context):
-    # Parse event body
-    eventBody = event["body"]
+    
+    personId = event["queryStringParameters"]['personId']
+    startTime = event['queryStringParameters']['startTime']
+    endTime = event['queryStringParameters']['endTime']
     
     # Construct the body of the response object
     responseBody = {}
-    eventBody = json.loads(eventBody)
-    query = f'SELECT * FROM Positions WHERE personId="{eventBody["personId"]}";'
+    
+    query = f'SELECT * FROM Positions WHERE personId={personId} AND time>={str(startTime)} AND time<{str(endTime)};'
 
     with conn.cursor() as cur:
         cur.execute(query)
@@ -43,6 +45,7 @@ def handler(event, context):
     responseObject['statusCode'] = 200
     responseObject['headers'] = {}
     responseObject['headers']['Content-Type'] = 'application/json'
+    responseObject['headers']['Access-Control-Allow-Origin'] = '*'
     responseObject['body'] = json.dumps(responseBody)
 
     # Return the response object

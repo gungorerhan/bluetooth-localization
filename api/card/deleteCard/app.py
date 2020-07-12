@@ -24,9 +24,13 @@ logger.info("SUCCESS: Connection to RDS MySQL instance succeeded")
 
 def handler(event, context):
     # Parse event body
-    eventBody = event["body"]
-    eventBody = json.loads(eventBody)
-    cardId = eventBody["cardId"]
+    #eventBody = event["body"]
+    #logger.info(f'EventBody: {str(eventBody)}')
+    #eventBody = json.loads(eventBody)
+    #cardId = eventBody["cardId"]
+    
+    cardId = event["queryStringParameters"]['cardId']
+    #logger.info(f'Card={cardId}')
     
     # Construct the body of the response object
     responseBody = {}
@@ -44,6 +48,7 @@ def handler(event, context):
     responseObject['statusCode'] = 200
     responseObject['headers'] = {}
     responseObject['headers']['Content-Type'] = 'application/json'
+    responseObject['headers']['Access-Control-Allow-Origin'] = '*'
     responseObject['body'] = json.dumps(responseBody)
 
     # Return the response object

@@ -35,7 +35,7 @@ def handler(event, context):
                 
         cur.execute(query)
         for row in cur:
-            responseBody[row[0]] = {"cardId":row[1], "firstName":row[2], "lastName:":row[3], "x":row[4], "y":row[5], "time":str(row[6])}
+            responseBody[row[0]] = {"cardId":row[1], "firstName":row[2], "lastName":row[3], "x":row[4], "y":row[5], "time":str(row[6])}
         
        
             
@@ -47,6 +47,7 @@ def handler(event, context):
     responseObject['statusCode'] = 200
     responseObject['headers'] = {}
     responseObject['headers']['Content-Type'] = 'application/json'
+    responseObject['headers']['Access-Control-Allow-Origin'] = '*'
     responseObject['body'] = json.dumps(responseBody)
 
     # Return the response object

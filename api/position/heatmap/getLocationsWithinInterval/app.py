@@ -42,8 +42,8 @@ def handler(event, context):
     y, x = im.shape[0]-1, im.shape[1]-1  # 0 indexed
     y_real, x_real = 3.5, 5.25
     x_ratio, y_ratio = x/x_real, y/y_real
-    print("X ratio = ", x_ratio)
-    print("Y ratio = ", y_ratio)
+    #print("X ratio = ", x_ratio)
+    #print("Y ratio = ", y_ratio)
 
     # create heatmap matrix
     heatmap = np.zeros((im.shape[0], im.shape[1]))
@@ -54,7 +54,9 @@ def handler(event, context):
         
         # fill heatmap matrix
         for row in cur:
-            heatmap[round(row[1]*y_ratio)] [round(row[0]*x_ratio)] += 1
+            x_coord = round(row[1]*y_ratio)
+            y_coord = round(row[0]*x_ratio)
+            heatmap[x_coord] [y_coord] += 1
 
     conn.commit()
     
@@ -77,6 +79,7 @@ def handler(event, context):
     # create final image
     plt.imshow(255 * hm, alpha=5, cmap=cmap)
     plt.imshow(im)
+    logger.info(hm.shape)
     plt.axis("off")
     
     # encode final image
